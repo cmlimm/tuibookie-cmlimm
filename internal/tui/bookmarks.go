@@ -63,7 +63,7 @@ func (m Model) updateBookmark(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.currentView = formView
 					return m, m.form.Init()
 				}
-				parts := strings.Fields(cmd)
+				parts := strings.Fields("open " + cmd)
 				if len(parts) > 0 {
 					m.executedCmd = cmd
 					c := exec.Command(parts[0], parts[1:]...)
