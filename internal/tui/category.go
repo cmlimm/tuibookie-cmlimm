@@ -23,10 +23,14 @@ func (m Model) updateCategory(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "up", "k":
 			if m.catCursor > 0 {
 				m.catCursor--
+			} else {
+				m.catCursor = total-1
 			}
 		case "down", "j":
 			if m.catCursor < total-1 {
 				m.catCursor++
+			} else {
+				m.catCursor = 0
 			}
 		case "enter", "right", "l":
 			if total > 0 {

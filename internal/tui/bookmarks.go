@@ -34,10 +34,14 @@ func (m Model) updateBookmark(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "up", "k":
 			if m.bmCursor > 0 {
 				m.bmCursor--
+			} else {
+				m.bmCursor = len(items)-1
 			}
 		case "down", "j":
 			if m.bmCursor < len(items)-1 {
 				m.bmCursor++
+			} else {
+				m.bmCursor = 0
 			}
 		case "enter":
 			if len(items) > 0 {
