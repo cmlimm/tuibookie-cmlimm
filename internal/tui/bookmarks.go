@@ -63,14 +63,6 @@ func (m Model) updateBookmark(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.currentView = formView
 					return m, m.form.Init()
 				}
-				if bm.Confirm {
-					m.pendingCmd = cmd
-					m.confirmMsg = "Execute: " + cmd + "?"
-					m.confirmAction = formConfirmExec
-					m.confirmCursor = 0
-					m.currentView = confirmView
-					return m, nil
-				}
 				parts := strings.Fields(cmd)
 				if len(parts) > 0 {
 					m.executedCmd = cmd
@@ -85,7 +77,6 @@ func (m Model) updateBookmark(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.statusMsg = "Shared bookmarks are read-only"
 				return m, nil
 			}
-			addConfirm := false
 			m.formAction = formAddBookmark
 			m.form = huh.NewForm(
 				huh.NewGroup(
@@ -95,10 +86,6 @@ func (m Model) updateBookmark(msg tea.Msg) (tea.Model, tea.Cmd) {
 					huh.NewInput().
 						Title("Command").
 						Key("cmd"),
-					huh.NewConfirm().
-						Title("Confirm before execute?").
-						Key("confirm").
-						Value(&addConfirm),
 				),
 			).WithTheme(formTheme)
 			m.currentView = formView
@@ -112,7 +99,6 @@ func (m Model) updateBookmark(msg tea.Msg) (tea.Model, tea.Cmd) {
 				bm := items[m.bmCursor]
 				editName := bm.Name
 				editCmd := bm.Cmd
-				editConfirm := bm.Confirm
 				m.editIndex = m.bmCursor
 				m.formAction = formEditBookmark
 				m.form = huh.NewForm(
@@ -125,10 +111,6 @@ func (m Model) updateBookmark(msg tea.Msg) (tea.Model, tea.Cmd) {
 							Title("Command").
 							Key("cmd").
 							Value(&editCmd),
-						huh.NewConfirm().
-							Title("Confirm before execute?").
-							Key("confirm").
-							Value(&editConfirm),
 					),
 				).WithTheme(formTheme)
 				m.currentView = formView
@@ -242,9 +224,6 @@ func (m Model) viewBookmark() string {
 	} else {
 		for i, bm := range items {
 			indicator := ""
-			if bm.Confirm {
-				indicator = " " + confirmIndicatorStyle.Render("!")
-			}
 			if i == m.bmCursor {
 				b.WriteString(selectedStyle.Render("> "+bm.Name) + indicator + "  " + renderCmd(bm.Cmd))
 			} else {

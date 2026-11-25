@@ -101,7 +101,6 @@ func (m Model) updateForm(msg tea.Msg) (tea.Model, tea.Cmd) {
 				newBm := bookmark.Bookmark{
 					Name:    name,
 					Cmd:     cmd,
-					Confirm: m.form.GetBool("confirm"),
 				}
 				if m.isSharedContext {
 					bookmark.AddBookmark(m.sharedBookmarks, m.selectedCat, newBm)
@@ -120,7 +119,6 @@ func (m Model) updateForm(msg tea.Msg) (tea.Model, tea.Cmd) {
 				updatedBm := bookmark.Bookmark{
 					Name:    name,
 					Cmd:     cmd,
-					Confirm: m.form.GetBool("confirm"),
 				}
 				if m.isSharedContext {
 					bookmark.UpdateBookmark(m.sharedBookmarks, m.selectedCat, m.editIndex, updatedBm)
@@ -269,16 +267,6 @@ func (m Model) updateForm(msg tea.Msg) (tea.Model, tea.Cmd) {
 			resolved := bookmark.ResolveParams(m.pendingCmd, values)
 			m.pendingParams = nil
 			m.paramValues = nil
-			items := m.bookmarks[m.selectedCat]
-			if len(items) > m.bmCursor && items[m.bmCursor].Confirm {
-				m.pendingCmd = resolved
-				m.confirmMsg = "Execute: " + resolved + "?"
-				m.confirmAction = formConfirmExec
-				m.confirmCursor = 0
-				m.currentView = confirmView
-				m.form = nil
-				return m, nil
-			}
 			m.pendingCmd = ""
 			m.currentView = bookmarkView
 			parts := strings.Fields(resolved)
