@@ -3,6 +3,7 @@ package tui
 import (
 	"os/exec"
 	"strings"
+	"fmt"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/huh/v2"
@@ -195,6 +196,16 @@ func renderCmd(cmd string) string {
 	return b.String()
 }
 
+func findMaxNameLength(bookmarks []bookmark.Bookmark) int {
+	bestLength := 0
+	for _, bookmark := range bookmarks {
+        if len(bookmark.Name) > bestLength {
+            bestLength = len(bookmark.Name)
+        }
+    }
+    return bestLength
+}
+
 func (m Model) viewBookmark() string {
 	var b strings.Builder
 
@@ -213,6 +224,7 @@ func (m Model) viewBookmark() string {
 	b.WriteString("\n\n")
 
 	items := m.currentBookmarkItems()
+	maxLength := findMaxNameLength(m.currentBookmarkItems())
 
 	if len(items) == 0 {
 		if m.isSharedContext && m.sharedReadOnly {
@@ -225,9 +237,9 @@ func (m Model) viewBookmark() string {
 		for i, bm := range items {
 			indicator := ""
 			if i == m.bmCursor {
-				b.WriteString(selectedStyle.Render("> "+bm.Name) + indicator + "  " + renderCmd(bm.Cmd))
+				b.WriteString(selectedStyle.Render("> "+fmt.Sprintf("%-*s", maxLength, bm.Name)) + indicator + "  " + boldStyle.Render(renderCmd(bm.Cmd)))
 			} else {
-				b.WriteString(normalStyle.Render("  "+bm.Name) + indicator + "  " + renderCmd(bm.Cmd))
+				b.WriteString(normalStyle.Render("  "+fmt.Sprintf("%-*s", maxLength, bm.Name)) + indicator + "  " + renderCmd(bm.Cmd))
 			}
 			b.WriteString("\n")
 		}

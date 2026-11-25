@@ -16,6 +16,7 @@ var (
 	helpStyle            lipgloss.Style
 	keyStyle             lipgloss.Style
 	selectedStyle        lipgloss.Style
+	boldStyle            lipgloss.Style
 	headingStyle         lipgloss.Style
 	normalStyle          lipgloss.Style
 	dimStyle             lipgloss.Style
@@ -79,6 +80,7 @@ func applyPalette(accent, green, yellow, text, muted, help, param, blurredBg, ti
 	helpStyle = lipgloss.NewStyle().Foreground(help)
 	keyStyle = lipgloss.NewStyle().Foreground(yellow)
 	selectedStyle = lipgloss.NewStyle().Foreground(green).Bold(true)
+	boldStyle = lipgloss.NewStyle().Bold(true)
 	headingStyle = lipgloss.NewStyle().Bold(true).Foreground(green)
 	normalStyle = lipgloss.NewStyle().Foreground(text)
 	dimStyle = lipgloss.NewStyle().Foreground(muted)
