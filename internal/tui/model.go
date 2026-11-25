@@ -32,6 +32,7 @@ const (
 	formEditCategory
 	formAddBookmark
 	formEditBookmark
+	formMoveBookmark
 	formImport
 	formImportManual
 	formChangeBookmarksPath

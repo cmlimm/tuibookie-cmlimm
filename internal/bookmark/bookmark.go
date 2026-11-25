@@ -82,6 +82,12 @@ func DeleteBookmark(bm Bookmarks, category string, index int) {
 	bm[category] = append(items[:index], items[index+1:]...)
 }
 
+func MoveBookmark(bm Bookmarks, categoryPrev string, categoryNext string, index int) {
+	item := bm[categoryPrev][index]
+	DeleteBookmark(bm, categoryPrev, index)
+	AddBookmark(bm, categoryNext, item)
+}
+
 func UpdateBookmark(bm Bookmarks, category string, index int, b Bookmark) {
 	bm[category][index] = b
 	sortBookmarks(bm[category])

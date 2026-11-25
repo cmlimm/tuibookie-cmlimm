@@ -133,6 +133,27 @@ func TestDeleteBookmark(t *testing.T) {
 	}
 }
 
+func TestMoveBookmark(t *testing.T) {
+	bm := Bookmarks{
+		"cat1": {
+			{Cmd: "ssh a@b", Name: "a"}
+		},
+		"cat2": {
+			{Cmd: "ssh c@d", Name: "c"}
+		},
+	}
+	MoveBookmark(bm, "cat1", "cat2", 0)
+	if len(bm["cat1"]) != 0 {
+		t.Fatalf("expected 0 bookmarks, got %d", len(bm["cat1"]))
+	}
+	if len(bm["cat2"]) != 2 {
+		t.Fatalf("expected 2 bookmarks, got %d", len(bm["cat2"]))
+	}
+	if bm["cat2"][1].Name != "c" {
+		t.Fatalf("expected 'c' bookmarks, got '%s'", bm["cat2"][1].Name)
+	}
+}
+
 func TestUpdateBookmark(t *testing.T) {
 	bm := Bookmarks{
 		"cat1": {{Cmd: "ssh a@b", Name: "a"}},

@@ -21,7 +21,7 @@ func (m Model) updateForm(msg tea.Msg) (tea.Model, tea.Cmd) {
 			switch m.formAction {
 			case formAddCategory, formEditCategory:
 				m.currentView = categoryView
-			case formAddBookmark, formEditBookmark, formRunParam:
+			case formAddBookmark, formEditBookmark, formMoveBookmark, formRunParam:
 				m.pendingCmd = ""
 				m.pendingParams = nil
 				m.paramValues = nil
@@ -130,6 +130,20 @@ func (m Model) updateForm(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return m, m.pushSharedCmd("edit bookmark: " + name)
 				}
 				bookmark.UpdateBookmark(m.bookmarks, m.selectedCat, m.editIndex, updatedBm)
+				m.save()
+			}
+			m.currentView = bookmarkView
+
+		case formMoveBookmark:
+			if name != "" {
+				if m.isSharedContext {
+					bookmark.MoveBookmark(m.sharedBookmarks, m.selectedCat, name, m.bmCursor)
+					m.saveShared()
+					m.currentView = bookmarkView
+					m.form = nil
+					return m, m.pushSharedCmd("move bookmark: " + m.selectedCat + " -> " + name)
+				}
+				bookmark.MoveBookmark(m.bookmarks, m.selectedCat, name, m.bmCursor)
 				m.save()
 			}
 			m.currentView = bookmarkView

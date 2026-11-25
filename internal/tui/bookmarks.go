@@ -155,6 +155,24 @@ func (m Model) updateBookmark(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.bmCursor--
 				}
 			}
+		case "m":
+			if len(items) > 0 {
+				if m.isSharedContext && m.sharedReadOnly {
+					m.statusMsg = "Shared bookmarks are read-only"
+					return m, nil
+				}
+				m.formAction = formMoveBookmark
+				m.form = huh.NewForm(
+					huh.NewGroup(
+						huh.NewSelect[string]().
+							Title("Pick a category").
+							Key("name").
+							Options(huh.NewOptions(m.categories...)...),
+						),
+					).WithTheme(formTheme)
+				m.currentView = formView
+				return m, m.form.Init()
+			}
 		}
 	}
 	return m, nil
@@ -237,7 +255,7 @@ func (m Model) viewBookmark() string {
 	}
 
 	b.WriteString("\n\n")
-	b.WriteString(renderHelp("[a]dd  [e]dit  [d]elete  [enter] run  [←/esc] back  [q]uit"))
+	b.WriteString(renderHelp("[a]dd  [e]dit  [m]ove  [d]elete  [enter] run  [←/esc] back  [q]uit"))
 
 	return b.String()
 }
