@@ -1,3 +1,8 @@
+## How is this different from regular `tuibookie`?
+
+I use mine as a regular bookmark manager, so mine always executes the `open` command to open links, and can also
+move bookmarks between categories.
+
 <p align="center">
   <img src="logo/tuibookie-logo.png" alt="TuiBookie" width="200">
 </p>
